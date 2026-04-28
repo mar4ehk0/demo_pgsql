@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: pg_index_demo
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: index_demo
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      # Чуть-чуть подкручиваем PostgreSQL под демо:
+      # work_mem поменьше, чтобы на 100k увидеть external merge при сортировке
+      # без индексов; shared_buffers побольше, чтобы Index Scan был честно
+      # горячим, а не упирался в I/O.
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    command:
+      - "postgres"
+      - "-c"
+      - "shared_buffers=256MB"
+      - "-c"
+      - "work_mem=4MB"
+      - "-c"
+      - "maintenance_work_mem=64MB"
+      - "-c"
+      - "random_page_cost=1.1"
+      - "-c"
+      - "effective_cache_size=512MB"
+      - "-c"
+      - "log_min_duration_statement=0"
+      - "-c"
+      - "track_io_timing=on"
+    ports:
+      - "5433:5432"   # 5433 на хосте, чтобы не конфликтовать с локальным PG
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - .:/sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U demo -d index_demo"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pg_data:
