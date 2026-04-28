@@ -10,12 +10,11 @@
 pg_index_demo/
 ├── docker-compose.yml          PostgreSQL 16-alpine, порт 5433 на хосте
 ├── Makefile                    все команды проекта
-└── sql/
-    ├── 01_ddl.sql              схема + таблицы users, orders
-    ├── 02_generate_data.sql    generate_series, параметр :rows
-    ├── 03_explain_before.sql   6 запросов с EXPLAIN ANALYZE без индексов
-    ├── 04_create_indexes.sql   single-column + composite индексы
-    └── 05_explain_after.sql    те же 6 запросов после индексов
+├── 01_ddl.sql                  схема + таблицы users, orders
+├── 02_generate_data.sql        generate_series, параметр :rows
+├── 03_explain_before.sql       6 запросов с EXPLAIN ANALYZE без индексов
+├── 04_create_indexes.sql       single-column + composite индексы
+└── 05_explain_after.sql        те же 6 запросов после индексов
 ```
 
 ## Требования
